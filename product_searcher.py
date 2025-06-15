@@ -50,7 +50,8 @@ def search_product(product_name: str):
 
     today_date = datetime.date.today()
     dataframe = pandas.DataFrame(data)
-    dataframe.to_excel(f"{slugify(product_name)}-price-research-{today_date}.xlsx")
+    filename = f"{slugify(product_name)}-price-research-{today_date}.xlsx"
+    dataframe.to_excel(filename)
     
 
-    return {"message": "done!"}
+    return {"message": "done", "filename": filename}

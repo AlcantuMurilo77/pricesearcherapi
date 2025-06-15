@@ -9,12 +9,9 @@ server = smtplib.SMTP('smtp.gmail.com', 587)
 server.ehlo()
 
 
-def login(email, password):
+def send_email(email, password, from_field, to_field, subject_field, message_filename, attachment_path):
     server.starttls()
     server.login(email, password)
-
-
-def send_email(email, from_field, to_field, subject_field, message_filename, attachment_path):
     email_msg = MIMEMultipart()
     email_msg['From'] = from_field
     email_msg['To'] = to_field
