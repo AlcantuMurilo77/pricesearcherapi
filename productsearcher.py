@@ -4,14 +4,17 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import pandas
 import datetime
+from slugify import slugify
 
 
 
-options = Options()
-options.add_argument("--headless")
-driver = webdriver.Chrome(options=options)
+
 
 def search_product(product_name: str):
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
+
     try:
         driver.get("https://mercadolivre.com.br/")
         driver.find_element(By.ID, "cb1-edit").click()
@@ -39,6 +42,7 @@ def search_product(product_name: str):
             product_prices.append(product_price)
         except Exception as e:
             continue
+    driver.quit()
     data = {
         "Product": product_names,
         "Price": product_prices
@@ -46,6 +50,7 @@ def search_product(product_name: str):
 
     today_date = datetime.date.today()
     dataframe = pandas.DataFrame(data)
-    dataframe.to_excel(f"{product_name} price research {today_date}.xlsx")
+    dataframe.to_excel(f"{slugify(product_name)}-price-research-{today_date}.xlsx")
+    
 
     return {"message": "done!"}
