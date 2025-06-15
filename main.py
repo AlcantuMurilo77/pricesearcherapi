@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Path, HTTPException, Query
 from dotenv import load_dotenv
 import os
-import product_searcher
-import email_sender
+import services.product_searcher as product_searcher
+import services.email_sender as email_sender
 
 load_dotenv()
 
@@ -18,7 +18,7 @@ def ping():
 
 @app.get("/searchproduct/{product_name}")
 def searchproduct(product_name: str = Path(..., min_length=2, max_length=100, pattern="^[a-zA-Z0-9çãáéêíóõúâô ]+$"),
-                email_destino: str = Query(..., min_length=5, regex=r"^[^@]+@[^@]+\.[^@]+$")
+                target_email: str = Query(..., min_length=5, regex=r"^[^@]+@[^@]+\.[^@]+$")
 ):
 
     result = product_searcher.search_product(product_name)
@@ -29,7 +29,7 @@ def searchproduct(product_name: str = Path(..., min_length=2, max_length=100, pa
     email_sender.send_email(email_login, 
                             email_password, 
                             "Product Price Searcher", 
-                            email_destino, 
+                            target_email, 
                             "Product Prices Report", 
                             "message.txt", 
                             result["filename"])
