@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Path, HTTPException, Query
-import product_searcher
-import email_sender
 from dotenv import load_dotenv
 import os
+import product_searcher
+import email_sender
+
 load_dotenv()
 
 
@@ -32,5 +33,7 @@ def searchproduct(product_name: str = Path(..., min_length=2, max_length=100, pa
                             "Product Prices Report", 
                             "message.txt", 
                             result["filename"])
+
+    os.remove(result["filename"])
     
     return result

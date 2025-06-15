@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import pandas
 import datetime
 from slugify import slugify
@@ -23,6 +25,11 @@ def search_product(product_name: str):
     except Exception as e:
         return {"error": f"something went wrong looking for search bar: {e}"}
 
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".ui-search-layout__item")))
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, ".ui-search-layout__item")) > 10)
+    
     try:
         product_cards = driver.find_elements(By.CSS_SELECTOR, ".ui-search-layout.ui-search-layout--grid > .ui-search-layout__item")
     except Exception as e:
